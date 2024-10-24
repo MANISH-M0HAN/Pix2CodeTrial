@@ -141,4 +141,18 @@ class Dataset:
         return temp
 
     def save_metadata(self, path):
-        np.save("{}/meta_dataset".format(path), np.array([self.input_shape, self.output_size, self.size]))
+        # Ensure input_shape and output_size are compatible
+        metadata = {
+        'input_shape': self.input_shape,
+        'output_size': self.output_size,
+        'size': self.size
+    }
+    
+    # Convert to a structured array or list if necessary
+    # If input_shape and output_size are tuples, ensure they are flattened or converted to lists
+        input_shape = list(self.input_shape) if isinstance(self.input_shape, tuple) else self.input_shape
+        output_size = int(self.output_size)  # Assuming output_size is a scalar
+        size = int(self.size)  # Assuming size is a scalar
+
+        np.save(f"{path}/meta_dataset.npy", np.array([input_shape, output_size, size], dtype=object))
+
